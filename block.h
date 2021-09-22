@@ -18,6 +18,12 @@ public:
     Block(const Block& b){
         pos=b.pos;
     }
+    const glm::vec3& get_pos(){
+        return pos;
+    }
+    void set_pos(double x,double y,double z){
+        pos={x,y,z};
+    }
     void setblock(){
         double x=pos.x;
         double y=pos.y;
@@ -34,7 +40,7 @@ public:
         glEnd();
         // D
         glBegin(GL_QUADS);
-        glColor3f(0.5,0.5,0.1);
+        glColor3f(0.5,0.3,0.1);
         glVertex3f(x,y-1,z);
         glVertex3f(x+1,y-1,z);
         glVertex3f(x+1,y-1,z+1);
@@ -42,7 +48,7 @@ public:
         glEnd();
         // B
         glBegin(GL_QUADS);
-        glColor3f(0.5,0.5,0.1);
+        glColor3f(0.5,0.3,0.1);
         glVertex3f(x,y-1,z);
         glVertex3f(x+1,y-1,z);
         glVertex3f(x+1,y,z);
@@ -50,7 +56,7 @@ public:
         glEnd();
         // F
         glBegin(GL_QUADS);
-        glColor3f(0.5,0.5,0.2);
+        glColor3f(0.5,0.3,0.1);
         glVertex3f(x,y-1,z+1);
         glVertex3f(x+1,y-1,z+1);
         glVertex3f(x+1,y,z+1);

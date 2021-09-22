@@ -2,6 +2,8 @@
 #define __CAMERA_H__
 
 #include <cmath>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -23,14 +25,6 @@ public:
         yaw=c.yaw;
         pitch=c.pitch;
     }
-    void move(glm::vec3& m){
-        pos-=glm::vec3(m.x*std::sin(yaw*PI/180),0.0,m.x*std::cos(yaw*PI/180));
-        //m*glm::vec3(std::cos(yaw*PI/180),0.0,std::sin(yaw*PI/180));
-    }
-    void move(glm::vec3 m){
-        pos-=glm::vec3(m.x*std::sin(yaw*PI/180),0.0,m.x*std::cos(yaw*PI/180));
-        //pos-=m*glm::vec3(std::cos(yaw*PI/180),0.0,std::sin(yaw*PI/180));
-    }
     void move(const char m,double length){
         switch(m){
             case 'w':pos-=glm::vec3(length*std::sin(yaw*PI/180),0.0,-length*std::cos(yaw*PI/180));break;
@@ -38,6 +32,7 @@ public:
             case 'a':pos-=glm::vec3(-length*std::cos(yaw*PI/180),0.0,-length*std::sin(yaw*PI/180));break;
             case 'd':pos+=glm::vec3(-length*std::cos(yaw*PI/180),0.0,-length*std::sin(yaw*PI/180));break;
         }
+        std::cout<<-pos.x<<" "<<-pos.y<<" "<<-pos.z<<std::endl;
     }
     void rotate(float x_offset,float y_offset){
         yaw+=x_offset*0.08;

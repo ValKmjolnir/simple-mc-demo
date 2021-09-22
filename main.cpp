@@ -11,11 +11,20 @@
 #include "glad.c"
 #include "camera.h"
 #include "block.h"
+#include "noise.h"
 
 Camera player;
+Perlin noise_gen(0.4,4);
 
-int w=1280;
+int w=1080;
 int h=600;
+
+Block world[65][65];
+void world_init(){
+    for(int i=0;i<65;++i)
+        for(int j=0;j<65;++j)
+            world[i][j].set_pos(i-32.0,int(noise_gen.perlin_noise(i/4.5,j/4.5)*5)-5.0,j-32.0);
+}
 
 void error_occur(const char* info){
     std::cout<<info<<std::endl;
@@ -72,22 +81,28 @@ void resize_window(GLFWwindow* window,int width,int height){
 }
 
 void light(){
-    glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
+    const GLfloat lightposition[]={0,-3,6,0};
+    static GLfloat ambientlight[]={0.6,0.6,0.6,0.6};
+    static float x=1;
+    const GLfloat diffuselight[]={0.6,0.6,0.6,0.6};
+    const GLfloat specularlight[]={0.2,0.2,0.2,0.2};
 
-    const GLfloat lightposition[]={0,1,0,0};
-    const GLfloat ambientlight[]={0.8,0.8,0.8,1};
-    const GLfloat diffuselight[]={0.5,0.5,0.5,1};
-    const GLfloat specularlight[]={0.2,0.2,0.2,1};
+    const GLfloat mat_ambient[]={0.1,0.1,0.1,1};
+    const GLfloat mat_diffuse[]={0.6,0.6,0.6,0.6};
+    const GLfloat mat_specular[]={0.2,0.2,0.2,0.2};
+    const GLfloat mat_shininess[]={1.0};
 
-    const GLfloat mat_ambient[]={0.0,0.0,0.0,1};
-    const GLfloat mat_diffuse[]={0.6,0.6,0.6,1};
-    const GLfloat mat_specular[]={0.2,0.2,0.2,1};
-    const GLfloat mat_shininess[]={0};
-    
+    for(int i=0;i<4;++i)
+        ambientlight[i]+=x*0.003;
+    if(ambientlight[0]>=1)
+        x=-1;
+    else if(ambientlight[0]<=0)
+        x=1;
+
     glLightfv(GL_LIGHT0,GL_POSITION,lightposition);
+
 	glLightfv(GL_LIGHT0,GL_AMBIENT,ambientlight);
-	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuselight);
+    glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuselight);
 	glLightfv(GL_LIGHT0,GL_SPECULAR,specularlight);
 
 	glMaterialfv(GL_FRONT,GL_AMBIENT,mat_ambient);
@@ -101,15 +116,20 @@ void init_program(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
 
+    glEnable(GL_MODELVIEW);
+
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
  
 	glEnable(GL_POINT_SMOOTH);
 	glHint(GL_POINT_SMOOTH_HINT,GL_NICEST);
  
 	glEnable(GL_LINE_SMOOTH);
 	glHint(GL_LINE_SMOOTH_HINT,GL_FASTEST);
- 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    light();
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 }
 
 void init_window(GLFWwindow* window){
@@ -123,40 +143,26 @@ void Draw3d(void)
 {
 	player.frustum(60,(double)w/(double)h,1.0,1024.0);
     light();
-    std::vector<Block> v={
-        {1.0,0.0,-1.0},
-        {0.0,1.0,-2.0},
-        {0.0,-1.0,-2.0},
-        {1.0,0.0,-2.0},
-        {-1.0,0.0,-2.0},
-        {-3.0,-1.0,-4.0},
-        {-1.0,-2.0,-5.0},
-        {3.0,4.0,-9.0},
-        {3.0,3.0,-9.0},
-        {3.0,2.0,-8.0},
-        {3.0,1.0,-7.0},
-        {3.0,0.0,-6.0},
-        {1.0,0.0,1.0},
-        {1.0,0.0,2.0},
-        {3.0,4.0,9.0},
-        {3.0,3.0,9.0},
-        {3.0,2.0,8.0},
-        {3.0,1.0,7.0},
-        {3.0,0.0,6.0}
-    };
-    for(auto& i:v){
-        i.setblock();
-    }
+
+    for(int i=0;i<65;++i)
+        for(int j=0;j<65;++j){
+            world[i][j].setblock();
+            for(int k=world[i][j].get_pos().y-1;k>-9;--k){
+                Block a(i-32.0,k-0.0,j-32.0);
+                a.setblock();
+            }
+        }
 }
 
 void render(GLFWwindow* window){
-    glClearColor(0.8f,0.8f,1.0f,1.0f);
+    glClearColor(0.9f,0.9f,1.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     Draw3d();
     return;
 }
 
 auto main()->int{
+    world_init();
     glfwInit();
     GLFWwindow *window=glfwCreateWindow(w,h,"3d demo",NULL,NULL);
     if(!window)
