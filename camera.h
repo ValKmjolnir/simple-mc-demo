@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 const double PI=3.14159265358979323846264338327950288;
+constexpr double D2R=PI/180.0;
 
 class Camera{
 private:
@@ -25,16 +26,20 @@ public:
         yaw=c.yaw;
         pitch=c.pitch;
     }
-    void move(const char m,double length){
+    void set_position(const double x,const double y,const double z){
+        pos={-x,-y,-z};
+    }
+    void move(const char m,const double length){
         switch(m){
             case 'w':pos-=glm::vec3(length*std::sin(yaw*PI/180),0.0,-length*std::cos(yaw*PI/180));break;
             case 's':pos+=glm::vec3(length*std::sin(yaw*PI/180),0.0,-length*std::cos(yaw*PI/180));break;
             case 'a':pos-=glm::vec3(-length*std::cos(yaw*PI/180),0.0,-length*std::sin(yaw*PI/180));break;
             case 'd':pos+=glm::vec3(-length*std::cos(yaw*PI/180),0.0,-length*std::sin(yaw*PI/180));break;
+            case ' ':pos-=glm::vec3(0.0,length,0.0);break;
+            case '~':pos+=glm::vec3(0.0,length,0.0);break;
         }
-        std::cout<<-pos.x<<" "<<-pos.y<<" "<<-pos.z<<std::endl;
     }
-    void rotate(float x_offset,float y_offset){
+    void rotate(const float x_offset,const float y_offset){
         yaw+=x_offset*0.08;
         pitch+=y_offset*0.08;
         if(yaw>360)
@@ -56,7 +61,7 @@ public:
         glLoadIdentity();
         make_frustum(fov,aspect_ratio,front,back);
         glRotatef(yaw,0,1,0);
-        glRotatef(pitch,std::cos(yaw*PI/180),0,std::sin(yaw*PI/180));
+        glRotatef(pitch,std::cos(yaw*D2R),0,std::sin(yaw*D2R));
         glTranslatef(pos.x,pos.y,pos.z);
         return;
     }
