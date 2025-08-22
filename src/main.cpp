@@ -171,6 +171,29 @@ void Draw3d(void) {
     camera.frustum(60, (double)w/(double)h, 0.1, 512.0);
     light();
 
+    static float x = 0.0;
+    static float z = 0.0;
+    auto fly_0 = Block(x - WORLD_SIZE / 2.0, 10, z - WORLD_SIZE / 2.0);
+    fly_0.setblock();
+
+    auto fly_1 = Block(x - WORLD_SIZE / 2.0, 10, WORLD_SIZE / 2.0 - z);
+    fly_1.setblock();
+
+    auto fly_2 = Block(WORLD_SIZE / 2.0 - x, 10, z - WORLD_SIZE / 2.0);
+    fly_2.setblock();
+
+    auto fly_3 = Block(WORLD_SIZE / 2.0 - x, 10, WORLD_SIZE / 2.0 - z);
+    fly_3.setblock();
+
+    if (x >= 0)
+        x -= 0.1;
+    if (z >= 0)
+        z -= 0.1;
+    if (x < 0)
+        x = WORLD_SIZE;
+    if (z < 0)
+        z = WORLD_SIZE;
+
     for (int i = 0; i < WORLD_SIZE; ++i)
         for (int j = 0; j < WORLD_SIZE; ++j) {
             world[i][j].setblock();
