@@ -14,13 +14,14 @@ private:
 private:
     static void setblock_pos(double x, double y, double z) {
         glPushMatrix();
-        glTranslatef(x,y,z);
+        glTranslatef(x, y, z);
         glBegin(GL_QUADS);
         // U
         glColor3f(0.0,0.5,0.1);
         glVertex3f(0,0,0);
         glVertex3f(1,0,0);
         glVertex3f(1,0,1);
+        glColor3f(0.2,0.5,0.1);
         glVertex3f(0,0,1);
         // D
         glColor3f(0.3,0.1,0.05);
@@ -32,30 +33,30 @@ private:
         glColor3f(0.5,0.3,0.1);
         glVertex3f(1,0,0);
         glVertex3f(0,0,0);
+        glColor3f(0.5,0.1,0.1);
         glVertex3f(0,-1,0);
-        glColor3f(0.5,0.2,0.1);
         glVertex3f(1,-1,0);
         // F
         glColor3f(0.5,0.3,0.1);
         glVertex3f(0,0,1);
         glVertex3f(1,0,1);
+        glColor3f(0.5,0.1,0.1);
         glVertex3f(1,-1,1);
-        glColor3f(0.5,0.2,0.1);
         glVertex3f(0,-1,1);
         // L
         glColor3f(0.5,0.3,0.1);
         glVertex3f(0,0,0);
         glVertex3f(0,0,1);
+        glColor3f(0.5,0.1,0.1);
         glVertex3f(0,-1,1);
-        glColor3f(0.5,0.2,0.1);
         glVertex3f(0,-1,0);
         // R
         glColor3f(0.5,0.3,0.1);
+        glVertex3f(1,0,1);
         glVertex3f(1,0,0);
+        glColor3f(0.5,0.1,0.1);
         glVertex3f(1,-1,0);
         glVertex3f(1,-1,1);
-        glColor3f(0.5,0.2,0.1);
-        glVertex3f(1,0,1);
 
         glEnd();
         glPopMatrix();
@@ -63,10 +64,10 @@ private:
 
 public:
     Block(double x=0,double y=0,double z=0) {
-        pos={x,y,z};
+        pos = {x,y,z};
     }
     Block(const Block& b) {
-        pos=b.pos;
+        pos = b.pos;
     }
     const glm::vec3& get_pos() {
         return pos;
