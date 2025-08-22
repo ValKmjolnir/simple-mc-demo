@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Block{
+class Block {
 private:
     glm::vec3 pos;
     static void setblock_pos(double x, double y, double z) {

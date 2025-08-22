@@ -12,10 +12,9 @@ GLuint VAO;
 GLuint VBO;
 GLuint EBO;
 
-#include "glad.c"
-#include "camera.h"
-#include "block.h"
-#include "noise.h"
+#include "camera.hpp"
+#include "block.hpp"
+#include "noise.hpp"
 
 Camera camera;
 Perlin noise_gen(0.4,4);

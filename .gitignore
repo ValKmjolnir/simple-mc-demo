@@ -2,3 +2,6 @@
 .vs
 .DS_Store
 *.exe
+
+build/
+build/**.o
