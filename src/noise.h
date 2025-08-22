@@ -1,9 +1,8 @@
-#ifndef __NOISE_H__
-#define __NOISE_H__
+#pragma once
 
 #include <cmath>
 
-class Perlin{
+class Perlin {
 private:
     float persistance;
     int octave_num;
@@ -36,6 +35,7 @@ private:
         double i2=cosine_interpolate(v3,v4,fractional_x);
         return cosine_interpolate(i1,i2,fractional_y);
     }
+
 public:
     Perlin(float _persistence=0.5,int _octave_num=4){
         persistance=_persistence;
@@ -51,5 +51,3 @@ public:
         return noise;
     }
 };
-
-#endif
