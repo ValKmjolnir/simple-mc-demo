@@ -19,16 +19,25 @@ GLuint EBO;
 Camera camera;
 Perlin noise_gen(0.4,4);
 
-int w=1080;
-int h=600;
+int w = 1400;
+int h = 800;
 
-Block world[65][65];
+const int WORLD_SIZE = 80;
+Block world[WORLD_SIZE][WORLD_SIZE];
 void world_init() {
-    for(int i=0;i<65;++i)
-        for(int j=0;j<65;++j){
-            world[i][j].set_pos(i-32.0,int(noise_gen.perlin_noise(i*0.15,j*0.15)*10)-10.0,j-32.0);
+    for (int i = 0; i < WORLD_SIZE; ++i)
+        for (int j = 0; j < WORLD_SIZE; ++j) {
+            world[i][j].set_pos(
+                i - WORLD_SIZE / 2.0,
+                int(noise_gen.perlin_noise(i * 0.15, j * 0.15) * 10) - 10.0,
+                j - WORLD_SIZE / 2.0
+            );
         }
-    camera.set_position(0.0,world[32][32].get_pos().y+1.7,0.0);
+    camera.set_position(
+        0.0,
+        world[WORLD_SIZE / 2][WORLD_SIZE / 2].get_pos().y + 1.7,
+        0.0
+    );
 }
 
 void error_occur(const char* info) {
@@ -162,14 +171,12 @@ void Draw3d(void) {
     camera.frustum(60, (double)w/(double)h, 0.1, 512.0);
     light();
 
-    for (int i = 0; i < 65; ++i)
-        for (int j = 0; j < 65; ++j) {
+    for (int i = 0; i < WORLD_SIZE; ++i)
+        for (int j = 0; j < WORLD_SIZE; ++j) {
             world[i][j].setblock();
             auto y = world[i][j].get_pos().y - 1;
-            for (int k = 0; k < 2; ++k) {
-                auto b = Block(i - 32.0, y - k, j - 32.0);
-                b.setblock();
-            }
+            auto b = Block(i - WORLD_SIZE / 2.0, y, j - WORLD_SIZE / 2.0);
+            b.setblock();
         }
 }
 

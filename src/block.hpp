@@ -10,6 +10,8 @@
 class Block {
 private:
     glm::vec3 pos;
+
+private:
     static void setblock_pos(double x, double y, double z) {
         glPushMatrix();
         glTranslatef(x,y,z);
@@ -60,19 +62,19 @@ private:
     }
 
 public:
-    Block(double x=0,double y=0,double z=0){
+    Block(double x=0,double y=0,double z=0) {
         pos={x,y,z};
     }
-    Block(const Block& b){
+    Block(const Block& b) {
         pos=b.pos;
     }
-    const glm::vec3& get_pos(){
+    const glm::vec3& get_pos() {
         return pos;
     }
-    void set_pos(double x,double y,double z){
+    void set_pos(double x,double y,double z) {
         pos={x,y,z};
     }
-    void modern_setblock(){
+    void modern_setblock() {
         float vertices[]={
             0,0,0,//0
             1,0,0,//1
@@ -103,7 +105,7 @@ public:
         glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_INT,nullptr);
         glBindVertexArray(0);
     }
-    void setblock() {
+    void setblock() const {
         setblock_pos(pos.x, pos.y, pos.z);
     }
 };
